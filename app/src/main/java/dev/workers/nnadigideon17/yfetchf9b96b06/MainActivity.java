@@ -25,10 +25,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
 
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private SwipeRefreshLayout refreshLayout;
+    private AdView adView;
     private ValueCallback<Uri[]> fileChooserCallback;
     private ActivityResultLauncher<Intent> fileChooserLauncher;
     private PermissionRequest pendingWebPermissionRequest;
@@ -59,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         refreshLayout = findViewById(R.id.refresh);
         webView = findViewById(R.id.webview);
+        adView = findViewById(R.id.adView);
+        MobileAds.initialize(this, initStatus -> {});
+        adView.loadAd(new AdRequest.Builder().build());
         // Only trigger pull-to-refresh when the WebView is actually at the top,
         // so normal scrolling never gets hijacked into a reload.
         refreshLayout.setOnRefreshListener(() -> webView.reload());
@@ -287,5 +294,23 @@ public class MainActivity extends AppCompatActivity {
         if (url != null && webView != null) {
             webView.loadUrl(url);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        if (adView != null) adView.pause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adView != null) adView.resume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null) adView.destroy();
+        super.onDestroy();
     }
 }
