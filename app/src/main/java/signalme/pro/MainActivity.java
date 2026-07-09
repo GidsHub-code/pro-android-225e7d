@@ -25,9 +25,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private SwipeRefreshLayout refreshLayout;
+    private AdView adViewTop;
+    private AdView adViewBottom;
     private ValueCallback<Uri[]> fileChooserCallback;
     private ActivityResultLauncher<Intent> fileChooserLauncher;
     private PermissionRequest pendingWebPermissionRequest;
@@ -58,6 +64,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         refreshLayout = findViewById(R.id.refresh);
         webView = findViewById(R.id.webview);
+
+        // AdMob: initialize the SDK and load the top + bottom banners.
+        adViewTop = findViewById(R.id.adViewTop);
+        adViewBottom = findViewById(R.id.adViewBottom);
+        MobileAds.initialize(this, initializationStatus -> {});
+        adViewTop.setAdUnitId("ca-app-pub-9769231127538087/4265217054");
+        adViewTop.loadAd(new AdRequest.Builder().build());
+        adViewBottom.setAdUnitId("ca-app-pub-9769231127538087/4265217054");
+        adViewBottom.loadAd(new AdRequest.Builder().build());
         // Only trigger pull-to-refresh when the WebView is actually at the top,
         // so normal scrolling never gets hijacked into a reload.
         refreshLayout.setOnRefreshListener(() -> webView.reload());
@@ -259,6 +274,27 @@ public class MainActivity extends AppCompatActivity {
         if (!needed.isEmpty()) {
             ActivityCompat.requestPermissions(this, needed.toArray(new String[0]), REQ_PERMISSIONS);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        if (adViewTop != null) adViewTop.pause();
+        if (adViewBottom != null) adViewBottom.pause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adViewTop != null) adViewTop.resume();
+        if (adViewBottom != null) adViewBottom.resume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adViewTop != null) adViewTop.destroy();
+        if (adViewBottom != null) adViewBottom.destroy();
+        super.onDestroy();
     }
 
     @Override
