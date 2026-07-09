@@ -1,17 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="#000000">
+
+    <!-- AdMob banner, anchored to the top of the screen -->
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        tools:adSize="BANNER"
+        tools:adUnitId="ca-app-pub-9769231127538087/4265217054" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
         <WebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</FrameLayout>
+
+    <!-- AdMob banner, anchored to the bottom of the screen -->
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        tools:adSize="BANNER"
+        tools:adUnitId="ca-app-pub-9769231127538087/4265217054" />
+
+</LinearLayout>
