@@ -74,6 +74,8 @@ dependencies {
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
     implementation 'androidx.core:core:1.13.1'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
+    
+implementation 'com.google.android.gms:play-services-ads:23.6.0'   // <-- add this back
 
     // Firebase Cloud Messaging (in-app + system tray push)
     implementation platform('com.google.firebase:firebase-bom:33.5.1')
